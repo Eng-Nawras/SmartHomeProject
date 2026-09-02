@@ -1,0 +1,128 @@
+digraph SmartHomeNetworkTopology {
+    rankdir=TB;
+    splines=curved;
+    node [fontname="Arial", fontsize=10];
+    edge [fontname="Arial", fontsize=9];
+
+    // Define subgraphs for different parts of the network
+    subgraph cluster_0 {
+        label = "IEEE 802.15.4 Wireless Side (PHY/MAC)";
+        style = filled;
+        fillcolor = "#E8F4F8";
+        color = "#0066CC";
+        fontcolor = "#0066CC";
+        fontsize = 12;
+        fontname = "Arial Bold";
+
+        // Periodic Sensors
+        subgraph cluster_periodic {
+            label = "Periodic Monitoring Sensors";
+            style = filled;
+            fillcolor = "#F0F8FF";
+            color = "#4169E1";
+
+            temp1 [label="temp1\n(Temp/Humidity)", shape=box, style=filled, fillcolor="#87CEEB", color="#1E90FF", penwidth=2];
+            temp2 [label="temp2\n(Temp/Humidity)", shape=box, style=filled, fillcolor="#87CEEB", color="#1E90FF", penwidth=2];
+            temp3 [label="temp3\n(Temp/Humidity)", shape=box, style=filled, fillcolor="#87CEEB", color="#1E90FF", penwidth=2];
+            motion1 [label="motion1\n(Motion/Occupancy)", shape=box, style=filled, fillcolor="#87CEEB", color="#1E90FF", penwidth=2];
+            motion2 [label="motion2\n(Motion/Occupancy)", shape=box, style=filled, fillcolor="#87CEEB", color="#1E90FF", penwidth=2];
+            motion3 [label="motion3\n(Motion/Occupancy)", shape=box, style=filled, fillcolor="#87CEEB", color="#1E90FF", penwidth=2];
+        }
+
+        // Event-Driven Sensors
+        subgraph cluster_event {
+            label = "Event-Driven Critical Sensors";
+            style = filled;
+            fillcolor = "#FFE4E1";
+            color = "#FF4500";
+
+            smoke1 [label="smoke1\n(Smoke/Alarm)", shape=box, style=filled, fillcolor="#FF6347", color="#DC143C", penwidth=2];
+            smoke2 [label="smoke2\n(Smoke/Alarm)", shape=box, style=filled, fillcolor="#FF6347", color="#DC143C", penwidth=2];
+        }
+
+        // Actuators
+        subgraph cluster_actuators {
+            label = "Actuators (IoT Devices)";
+            style = filled;
+            fillcolor = "#F5F5DC";
+            color = "#DAA520";
+
+            light1 [label="light1\n(Light)", shape=box, style=filled, fillcolor="#FFD700", color="#FF8C00", penwidth=2];
+            light2 [label="light2\n(Light)", shape=box, style=filled, fillcolor="#FFD700", color="#FF8C00", penwidth=2];
+            hvac1 [label="hvac1\n(HVAC/Climate)", shape=box, style=filled, fillcolor="#FFD700", color="#FF8C00", penwidth=2];
+            alarm1 [label="alarm1\n(Alarm)", shape=box, style=filled, fillcolor="#FFD700", color="#FF8C00", penwidth=2];
+        }
+
+        // Wireless Medium
+        radio [label="IEEE 802.15.4\nNarrowband Radio Medium\n(PHY Layer)", shape=ellipse, style=filled, fillcolor="#E0FFE0", color="#228B22", penwidth=2];
+    }
+
+    // Gateway
+    gateway [label="Gateway / Border Router\n(Eth + IEEE 802.15.4)", shape=box, style=filled, fillcolor="#90EE90", color="#228B22", penwidth=3];
+
+    // Wired Core Network
+    subgraph cluster_1 {
+        label = "Wired IP Core Network (Ethernet)";
+        style = filled;
+        fillcolor = "#FFFACD";
+        color = "#FF8C00";
+        fontcolor = "#FF8C00";
+        fontsize = 12;
+        fontname = "Arial Bold";
+
+        coreSwitch [label="Core Switch\n(Ethernet Switch)", shape=box, style=filled, fillcolor="#FFFACD", color="#FF8C00", penwidth=2];
+        monitoringApp [label="Monitoring App\n(CoAP/MQTT Broker)\n(Application Server)", shape=box, style=filled, fillcolor="#DEB887", color="#8B4513", penwidth=3];
+    }
+
+    // Network Infrastructure
+    subgraph cluster_infra {
+        label = "Network Infrastructure";
+        style = filled;
+        fillcolor = "#F0F8FF";
+        color = "#000080";
+
+        configurator [label="IPv4 Configurator\n(Network Layer)", shape=ellipse, style=filled, fillcolor="#B0E0E6", color="#000080"];
+        visualizer [label="Visualizer\n(Monitoring)", shape=ellipse, style=filled, fillcolor="#B0E0E6", color="#000080"];
+    }
+
+    // Connections - Wireless sensors to radio medium
+    temp1 -> radio [label="802.15.4\nFrames"];
+    temp2 -> radio [label="802.15.4\nFrames"];
+    temp3 -> radio [label="802.15.4\nFrames"];
+    motion1 -> radio [label="802.15.4\nFrames"];
+    motion2 -> radio [label="802.15.4\nFrames"];
+    motion3 -> radio [label="802.15.4\nFrames"];
+    smoke1 -> radio [label="Event\nFrames"];
+    smoke2 -> radio [label="Event\nFrames"];
+    light1 -> radio [label="802.15.4\nFrames"];
+    light2 -> radio [label="802.15.4\nFrames"];
+    hvac1 -> radio [label="802.15.4\nFrames"];
+    alarm1 -> radio [label="802.15.4\nFrames"];
+
+    // Radio to Gateway
+    radio -> gateway [label="Wireless Link\n(IEEE 802.15.4)", color="#0066CC", penwidth=2];
+
+    // Gateway to Core Switch
+    gateway -> coreSwitch [label="Ethernet Link\n(1 Gbps)", color="#FF8C00", penwidth=2];
+
+    // Core Switch to Monitoring App
+    coreSwitch -> monitoringApp [label="Ethernet Link\n(1 Gbps)", color="#FF8C00", penwidth=2];
+
+    // Infrastructure connections
+    gateway -> configurator [style=dashed, color="#888888", label="Routes"];
+    coreSwitch -> visualizer [style=dashed, color="#888888", label="Monitoring"];
+
+    // Legend
+    subgraph cluster_legend {
+        label = "Legend";
+        style = filled;
+        fillcolor = "#FFFFFF";
+        color = "#CCCCCC";
+
+        l1 [label="Periodic Sensors\n(Low Priority)", shape=box, style=filled, fillcolor="#87CEEB", color="#1E90FF"];
+        l2 [label="Event Sensors\n(High Priority)", shape=box, style=filled, fillcolor="#FF6347", color="#DC143C"];
+        l3 [label="Actuators", shape=box, style=filled, fillcolor="#FFD700", color="#FF8C00"];
+        l4 [label="Gateway", shape=box, style=filled, fillcolor="#90EE90", color="#228B22"];
+        l5 [label="Core Network", shape=box, style=filled, fillcolor="#DEB887", color="#8B4513"];
+    }
+}

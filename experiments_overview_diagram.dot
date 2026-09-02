@@ -1,0 +1,38 @@
+digraph ExperimentComparison {
+    rankdir=TB;
+    node [fontname="Arial", fontsize=10, shape=box, style=filled];
+    edge [fontname="Arial", fontsize=9];
+
+    title [label="5 Experiments Overview", shape=none, fontsize=16, fontname="Arial Bold"];
+
+    // Exp 1
+    exp1 [label="Experiment 1: Scalability\n━━━━━━━━━━━━━━━━━━\nNetwork Size Impact\n\nVariable: Number of Nodes (N)\nValues: 5, 10, 20, 30, 40\n\nFixed: Payload (50B), Interval (10s)\n\nMetrics: PDR, Delay, Throughput\n\nKey Question: When does\ncongestion occur?", fillcolor="#87CEEB", color="#1E90FF", penwidth=2];
+
+    // Exp 2
+    exp2 [label="Experiment 2: Reporting Interval\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\nFreshness vs Energy Trade-off\n\nVariable: Interval (T)\nValues: 1s, 5s, 10s, 30s, 60s\n\nFixed: Nodes (12), Payload (50B)\n\nMetrics: Delay, PDR, Energy\n\nKey Question: Optimal update\nfrequency for battery life?", fillcolor="#90EE90", color="#228B22", penwidth=2];
+
+    // Exp 3
+    exp3 [label="Experiment 3: Critical Events\n━━━━━━━━━━━━━━━━━━━━━\nUrgent Traffic under Load\n\nVariable: Background Load (BG)\nValues: 10s, 5s, 2s, 1s, 0.5s\n\nFixed: Nodes (12), Payload (50B)\n\nMetrics: Event Latency, Loss, Jitter\n\nKey Question: Can critical\nevents bypass congestion?", fillcolor="#FFB6C6", color="#DC143C", penwidth=2];
+
+    // Exp 4
+    exp4 [label="Experiment 4: App Strategies\n━━━━━━━━━━━━━━━━━━━━━━\nPolling vs Event Notification\n\nStrategies:\nA) Request/Response (CoAP)\nB) Publish/Subscribe (MQTT)\n\nVariable: Polling Interval (I)\nValues: 1s, 5s, 10s, 30s\n\nMetrics: Latency, Traffic, PDR\n\nKey Question: Which is better\nfor smart homes?", fillcolor="#FFD700", color="#FF8C00", penwidth=2];
+
+    // Exp 5
+    exp5 [label="Experiment 5: Packet Size\n━━━━━━━━━━━━━━━━━━━━\n6LoWPAN Fragmentation\n\nVariable: Payload (L)\nValues: 20B, 50B, 100B, 200B, 400B\n\nFixed: Nodes (12), Interval (5s)\n\nMetrics: Fragmentation,\nDelay, PDR, Energy\n\nKey Question: Fragmentation\nimpact on performance?", fillcolor="#DDA0DD", color="#9932CC", penwidth=2];
+
+    // Connections
+    title -> exp1;
+    title -> exp2;
+    title -> exp3;
+    title -> exp4;
+    title -> exp5;
+
+    exp1 -> exp2 [style=invis];
+    exp2 -> exp3 [style=invis];
+    exp3 -> exp4 [style=invis];
+    exp4 -> exp5 [style=invis];
+
+    // Summary box
+    summary [label="All Experiments\n━━━━━━━━━━━━━━━━\nSeeds: 5 per parameter\nBase Network: 12 nodes\nTopology: Fixed (SmartHomeNetwork)\nTraffic Classes: Periodic + Event-driven", 
+              shape=box, style=filled, fillcolor="#F5F5DC", color="#8B4513", penwidth=2];
+}

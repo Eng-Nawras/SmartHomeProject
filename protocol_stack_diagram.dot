@@ -1,0 +1,84 @@
+digraph ProtocolStack {
+    rankdir=LR;
+    nodesep=0.3;
+    ranksep=0.5;
+    node [fontname="Arial", fontsize=11, shape=box, style=filled];
+    edge [fontname="Arial", fontsize=9];
+
+    // Application Layer
+    subgraph cluster_app {
+        label = "Application Layer";
+        color = "#FF6B6B";
+        style = filled;
+        fillcolor = "#FFE5E5";
+        fontcolor = "#CC0000";
+        fontsize = 12;
+
+        app1 [label="Sensor Apps\n(UdpBasicApp)", fillcolor="#FF4444", color="#990000", fontcolor="white", penwidth=2];
+        app2 [label="Monitoring App\n(UdpSink/Broker)", fillcolor="#FF4444", color="#990000", fontcolor="white", penwidth=2];
+    }
+
+    // Transport Layer
+    subgraph cluster_transport {
+        label = "Transport Layer";
+        color = "#4ECDC4";
+        style = filled;
+        fillcolor = "#E0F7F6";
+        fontcolor = "#008080";
+        fontsize = 12;
+
+        udp [label="UDP Protocol", fillcolor="#4ECDC4", color="#008080", fontcolor="white", penwidth=2];
+    }
+
+    // Network Layer
+    subgraph cluster_network {
+        label = "Network Layer";
+        color = "#45B7D1";
+        style = filled;
+        fillcolor = "#E0F4FF";
+        fontcolor = "#003366";
+        fontsize = 12;
+
+        ipv4 [label="IPv4", fillcolor="#45B7D1", color="#003366", fontcolor="white", penwidth=2];
+        ipv6 [label="IPv6/6LoWPAN\n(Compression)", fillcolor="#45B7D1", color="#003366", fontcolor="white", penwidth=2];
+        icmp [label="ICMP/ND", fillcolor="#45B7D1", color="#003366", fontcolor="white", penwidth=2];
+    }
+
+    // MAC Layer
+    subgraph cluster_mac {
+        label = "MAC Layer";
+        color = "#F9A825";
+        style = filled;
+        fillcolor = "#FFF4E0";
+        fontcolor = "#CC6600";
+        fontsize = 12;
+
+        mac802 [label="IEEE 802.15.4 MAC\n(CSMA-CA)", fillcolor="#F9A825", color="#CC6600", fontcolor="white", penwidth=2];
+    }
+
+    // Physical Layer
+    subgraph cluster_phy {
+        label = "Physical Layer (PHY)";
+        color = "#95E1D3";
+        style = filled;
+        fillcolor = "#E0F9F7";
+        fontcolor = "#006666";
+        fontsize = 12;
+
+        phy [label="IEEE 802.15.4 PHY\nNarrowband (2.4 GHz)\nO-QPSK Modulation", fillcolor="#95E1D3", color="#006666", fontcolor="white", penwidth=2];
+    }
+
+    // Connections
+    app1 -> udp;
+    app2 -> udp;
+    udp -> ipv4;
+    udp -> ipv6;
+    udp -> icmp;
+    ipv4 -> mac802;
+    ipv6 -> mac802;
+    icmp -> mac802;
+    mac802 -> phy;
+
+    // Side annotations for wireless side
+    side [label="Wireless Side\n(Sensors/Actuators/Gateway)", shape=none, fontsize=10, fontcolor="#0066CC"];
+}

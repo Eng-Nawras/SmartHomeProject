@@ -1,0 +1,202 @@
+SMART-HOME IoT NETWORK TOPOLOGY - ASCII DIAGRAM
+==================================================
+
+WIRELESS SIDE (IEEE 802.15.4):
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│  PERIODIC MONITORING SENSORS          EVENT-DRIVEN SENSORS                  │
+│  ├─ temp1 (Temp/Humidity)            ├─ smoke1 (Smoke/Alarm)               │
+│  ├─ temp2 (Temp/Humidity)            └─ smoke2 (Smoke/Alarm)               │
+│  ├─ temp3 (Temp/Humidity)                                                   │
+│  ├─ motion1 (Motion/Occupancy)       ACTUATORS                             │
+│  ├─ motion2 (Motion/Occupancy)       ├─ light1                             │
+│  └─ motion3 (Motion/Occupancy)       ├─ light2                             │
+│                                       ├─ hvac1 (HVAC/Climate)               │
+│           (Low Priority)              └─ alarm1 (Notification)              │
+│                                       (Actuators + Alarm)                   │
+│                                                                              │
+│              ╔════════════════════════════════════════╗                     │
+│              ║  IEEE 802.15.4 Radio Medium (PHY/MAC)║                     │
+│              ║  - Narrowband Scalar Radio             ║                     │
+│              ║  - 2.4 GHz O-QPSK                      ║                     │
+│              ║  - CSMA-CA MAC Protocol                ║                     │
+│              ╚════════════════════════════════════════╝                     │
+│                              │                                              │
+│                              │ (Wireless Link)                              │
+│                              ▼                                              │
+│                      ┌────────────────┐                                     │
+│                      │    GATEWAY     │                                     │
+│                      │  (Border Router)                                     │
+│                      │ IEEE 802.15.4  │                                     │
+│                      │   + Ethernet   │                                     │
+│                      └────────┬───────┘                                     │
+│                               │                                             │
+└───────────────────────────────┼─────────────────────────────────────────────┘
+                                │
+                    ┌───────────────────────┐
+                    │ Ethernet Link (1 Gbps)│
+                    │ (5e-8 s delay)        │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌────────────────────────┐
+                    │    CORE SWITCH         │
+                    │  (Ethernet Switch)     │
+                    └───────────┬────────────┘
+                                │
+                    ┌───────────────────────┐
+                    │ Ethernet Link (1 Gbps)│
+                    │ (5e-8 s delay)        │
+                    └───────────┬───────────┘
+                                │
+                                ▼
+                    ┌──────────────────────────────┐
+                    │   MONITORING APPLICATION     │
+                    │   - CoAP/MQTT Broker         │
+                    │   - Sink for sensor data     │
+                    │   - Server for control cmds  │
+                    └──────────────────────────────┘
+
+WIRED SIDE (Ethernet IP Core)
+
+
+NETWORK STACK (per node):
+═══════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ APPLICATION LAYER                                                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│ • UdpBasicApp (Sensors)     →  Sends to monitoringApp:5000             │
+│ • UdpSink (Monitoring)      →  Receives on port 5000                   │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ TRANSPORT LAYER                                                         │
+├─────────────────────────────────────────────────────────────────────────┤
+│ • UDP Protocol              →  Connectionless, unreliable               │
+│ • Ports: 5000 (data), 5001 (control)                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ NETWORK LAYER                                                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Wireless Side:              │  Wired Side:                              │
+│ • IPv6/6LoWPAN            │  • IPv4                                    │
+│ • Header Compression      │  • Global Addresses                        │
+│ • Fragmentation at ~60B   │  • Static Routing                          │
+│ • Unicast/Broadcast       │  • Routing via Gateway                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ MAC LAYER                                                               │
+├─────────────────────────────────────────────────────────────────────────┤
+│ • IEEE 802.15.4 MAC        →  CSMA-CA                                  │
+│ • Frame Size: 127 octets   →  PSDU limit                               │
+│ • ACK Enabled              →  Reliability per-link                     │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│ PHYSICAL LAYER                                                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│ • IEEE 802.15.4 PHY        →  2.4 GHz ISM Band                         │
+│ • O-QPSK Modulation        →  250 kbps Data Rate                       │
+│ • Narrowband Scalar Radio  →  Free-space Propagation Model             │
+│ • Background Noise: -110 dBm                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+TRAFFIC CLASSES:
+═════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ CLASS 1: PERIODIC MONITORING (Low Priority, Best-Effort)              │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Sources:   temp1, temp2, temp3, motion1, motion2, motion3             │
+│ Destination: monitoringApp (port 5000)                                │
+│ Interval:   10 s (configurable, baseline)                             │
+│ Payload:    50 B (configurable)                                       │
+│ Traffic:    UdpBasicApp (periodic)                                    │
+│ Tolerance:  Can tolerate delay and loss                               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ CLASS 2: EVENT-DRIVEN/CRITICAL (High Priority, Latency-Sensitive)    │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Sources:   smoke1, smoke2 (alarm triggers)                            │
+│ Destination: monitoringApp (port 5001 in critical scenarios)          │
+│ Interval:   Exponential(15s) (event-based, emergency)                 │
+│ Payload:    50 B (fixed)                                              │
+│ Traffic:    UdpBasicApp (event-triggered)                             │
+│ Tolerance:  Cannot tolerate delay or loss (life safety)               │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+KEY ARCHITECTURAL FEATURES:
+═════════════════════════════════════════════════════════════════════════
+
+1. HETEROGENEOUS DEVICES
+   ├─ Sensors (temperature, humidity, motion, occupancy, smoke)
+   ├─ Actuators (lights, HVAC, alarms)
+   └─ Network devices (gateway, switch, server)
+
+2. CLEAR SEPARATION OF CONCERNS
+   ├─ Wireless Edge (IEEE 802.15.4, resource-constrained)
+   ├─ Gateway (Protocol translation, 802.15.4 ↔ Ethernet)
+   └─ Wired Core (IP-based, standard networking)
+
+3. TWO TRAFFIC CLASSES
+   ├─ Monitoring: Periodic, best-effort
+   └─ Critical: Event-driven, low-latency requirement
+
+4. SCALABILITY
+   ├─ Fixed 12-node baseline (SmartHomeNetwork)
+   └─ Parametric N-node variant (ScalabilityNetwork)
+
+5. CROSS-LAYER MODELING
+   ├─ Application → Transport → Network → MAC → PHY
+   ├─ IEEE 802.15.4 frame limits (127 octets)
+   ├─ IPv6/6LoWPAN compression effects
+   └─ Fragmentation thresholds (~60-80 B payload)
+
+
+ADDRESSES & ROUTING:
+═════════════════════════════════════════════════════════════════════════
+
+All nodes configured with IPv4 addresses (simulated):
+• Wireless nodes (sensors/actuators): Unique IPs via configurator
+• Gateway: Bridge IP (both wireless and wired sides)
+• Monitoring App: Server IP on wired core
+• Core Switch: Transparent L2 device (no IP required)
+
+Routing:
+• Global ARP (simplified, for simulation)
+• Static routes computed at startup by Ipv4NetworkConfigurator
+• Default route through gateway for wireless nodes
+• Monitoring app reachable by all sensors
+
+
+SIMULATION PARAMETERS (Baseline):
+═════════════════════════════════════════════════════════════════════════
+
+Baseline Network Configuration:
+├─ Nodes: 12 (3 temp + 3 motion + 2 smoke + 2 light + 1 hvac + 1 alarm)
+├─ Payload: 50 bytes
+├─ Interval: 10 seconds
+├─ Simulation Time: 120–600 seconds
+├─ Random Seeds: 5 per experiment
+├─ Background Noise: -110 dBm
+└─ Propagation Model: Free-space (Inet scalar radio)
+
+Extensions per Experiment:
+├─ Exp 1: Vary N (5, 10, 20, 30, 40 nodes)
+├─ Exp 2: Vary T (1s, 5s, 10s, 30s, 60s intervals)
+├─ Exp 3: Vary BG load (0.5s–10s background intervals)
+├─ Exp 4: Compare polling vs. pub/sub patterns
+└─ Exp 5: Vary L (20B–400B payloads)
+
+═════════════════════════════════════════════════════════════════════════
+Last Updated: September 1, 2026
