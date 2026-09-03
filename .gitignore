@@ -1,5 +1,16 @@
 .venv/
 __pycache__/
 *.pyc
-results/
 *.log
+results/Ieee802154-*
+results/TestNetwork-*
+results/*.vec
+results/*.vci
+results/exp1_results.csv
+results/exp1_stress_results.csv
+results/exp2_results.csv
+results/exp3_results.csv
+results/exp4_ps_results.csv
+results/exp4_rr_results.csv
+results/exp5_results.csv
+.qtenvrc

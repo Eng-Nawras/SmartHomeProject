@@ -1,0 +1,9 @@
+I,PDR_mean,latency_mean_ms,total_packets_per_run,strategy
+1,1.0,7.4158334544501265,3600.0,Request/Response (RTT)
+5,1.0,6.813532553037777,720.0,Request/Response (RTT)
+10,1.0,6.816779950555567,360.0,Request/Response (RTT)
+30,1.0,6.720424395,120.0,Request/Response (RTT)
+1,0.9998888888888888,4.6647511904362196,1800.0,Publish/Subscribe (one-way)
+5,1.0,4.40516864194446,360.0,Publish/Subscribe (one-way)
+10,1.0,4.411390864166661,180.0,Publish/Subscribe (one-way)
+30,1.0,4.4135241975,60.0,Publish/Subscribe (one-way)
