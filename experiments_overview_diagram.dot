@@ -18,7 +18,7 @@ digraph ExperimentComparison {
     exp4 [label="Experiment 4: App Strategies\n━━━━━━━━━━━━━━━━━━━━━━\nPolling vs Event Notification\n\nStrategies:\nA) Request/Response (CoAP)\nB) Publish/Subscribe (MQTT)\n\nVariable: Polling Interval (I)\nValues: 1s, 5s, 10s, 30s\n\nMetrics: Latency, Traffic, PDR\n\nKey Question: Which is better\nfor smart homes?", fillcolor="#FFD700", color="#FF8C00", penwidth=2];
 
     // Exp 5
-    exp5 [label="Experiment 5: Packet Size\n━━━━━━━━━━━━━━━━━━━━\n6LoWPAN Fragmentation\n\nVariable: Payload (L)\nValues: 20B, 50B, 100B, 200B, 400B\n\nFixed: Nodes (12), Interval (5s)\n\nMetrics: Fragmentation,\nDelay, PDR, Energy\n\nKey Question: Fragmentation\nimpact on performance?", fillcolor="#DDA0DD", color="#9932CC", penwidth=2];
+    exp5 [label="Experiment 5: Packet Size\n━━━━━━━━━━━━━━━━━━━━\nIEEE 802.15.4 Fragmentation / Analytical 6LoWPAN Comparison\n\nVariable: Payload (L)\nValues: 20B, 50B, 100B, 200B, 400B\n\nFixed: Nodes (12), Interval (5s)\n\nMetrics: Fragmentation,\nDelay, PDR, Energy\n\nKey Question: Fragmentation\nimpact on performance?", fillcolor="#DDA0DD", color="#9932CC", penwidth=2];
 
     // Connections
     title -> exp1;

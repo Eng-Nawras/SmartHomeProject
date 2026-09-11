@@ -40,7 +40,7 @@ digraph ProtocolStack {
         fontsize = 12;
 
         ipv4 [label="IPv4", fillcolor="#45B7D1", color="#003366", fontcolor="white", penwidth=2];
-        ipv6 [label="IPv6/6LoWPAN\n(Compression)", fillcolor="#45B7D1", color="#003366", fontcolor="white", penwidth=2];
+        ipv4 [label="IPv4\n(Network Layer)", fillcolor="#45B7D1", color="#003366", fontcolor="white", penwidth=2];
         icmp [label="ICMP/ND", fillcolor="#45B7D1", color="#003366", fontcolor="white", penwidth=2];
     }
 
@@ -72,10 +72,10 @@ digraph ProtocolStack {
     app1 -> udp;
     app2 -> udp;
     udp -> ipv4;
-    udp -> ipv6;
+    udp -> ipv4;
     udp -> icmp;
     ipv4 -> mac802;
-    ipv6 -> mac802;
+    ipv4 -> mac802;
     icmp -> mac802;
     mac802 -> phy;
 

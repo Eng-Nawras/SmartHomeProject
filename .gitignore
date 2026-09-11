@@ -17,3 +17,7 @@ results/exp5_results.csv
 results/exp6_mobility_results.csv
 results/exp7_obstacles_results.csv
 results/exp8_energy_results.csv
+
+# Raw scalar simulation results
+results/*.sca
+results/Exp9_*

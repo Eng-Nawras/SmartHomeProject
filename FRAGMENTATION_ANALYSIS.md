@@ -1,5 +1,7 @@
-# Cross-Layer Packet-Size / 6LoWPAN Fragmentation Analysis
+# Cross-Layer Packet-Size Study / Analytical 6LoWPAN Comparison
 ## Analytical Calculation vs. Simulated Results (Experiment 5)
+
+This document addresses the packet-size/fragmentation requirement in Section 4 of the project brief. The current OMNeT++ model implements IPv4 over IEEE 802.15.4; it does not implement an IPv6/6LoWPAN adaptation layer. Therefore, 6LoWPAN fragmentation and header-compression values below are analytical references, while the measured frame counts and performance metrics come from the implemented simulation.
 
 This document satisfies Section 4 of the project brief: *"Vary application payload L... relate application/transport/network overhead to IEEE 802.15.4 frame limits and 6LoWPAN compression/fragmentation... Report the number of link-layer transmissions/fragments from the model **or** a clearly documented calculation... Clearly distinguish simulated behavior from analytical approximation."*
 
@@ -74,7 +76,7 @@ These values are measured directly from the OMNeT++/INET simulation: `mac_frames
 | 200 | 3 | 3.038 | ✅ Close (Δ = 0.038) |
 | 400 | 5 | 5.078 | ✅ Close (Δ = 0.078) |
 
-**The analytical model closely predicts the simulated base fragment count for every payload size.** The small fractional excess in the simulated values (0.018–0.078 extra frames per packet) is **not additional fragmentation** — it is attributable to **MAC-layer retransmissions** caused by CSMA/CA channel-access failures and occasional ACK loss under contention, which the analytical model deliberately does not capture (it is a static frame-size calculation, not a channel-contention model). This is an important simulation-vs-analysis boundary to state explicitly, as required by the brief.
+**The analytical model can be compared with the simulated IEEE 802.15.4 transmission/frame behavior, but this agreement must not be interpreted as evidence that 6LoWPAN fragmentation is implemented.** The small fractional excess in the simulated values (0.018–0.078 extra frames per packet) is **not additional fragmentation** — it is attributable to **MAC-layer retransmissions** caused by CSMA/CA channel-access failures and occasional ACK loss under contention, which the analytical model deliberately does not capture (it is a static frame-size calculation, not a channel-contention model). This is an important simulation-vs-analysis boundary to state explicitly, as required by the brief.
 
 ---
 
@@ -91,4 +93,4 @@ Cross-referencing with Experiment 5's other metrics:
 
 ## 5. Simulation Boundary Statement
 
-As required by the project brief: the **fragment counts and PDR/delay/energy values above are measured from the OMNeT++/INET simulation** (Section 2). The **frame-capacity thresholds and expected fragment counts** (Section 1) are **analytically derived** from the IEEE 802.15.4 and 6LoWPAN (RFC 4944 / RFC 6282) specifications, independent of the simulator. Section 3 shows the two approaches agree closely, which validates that the INET IEEE 802.15.4 model is fragmenting packets consistently with the standard's framing rules.
+As required by the project brief: the **fragment counts and PDR/delay/energy values above are measured from the OMNeT++/INET simulation** (Section 2). The **frame-capacity thresholds and expected fragment counts** (Section 1) are **analytically derived** from the IEEE 802.15.4 and 6LoWPAN (RFC 4944 / RFC 6282) specifications, independent of the simulator. Section 3 shows the two approaches agree closely, which provides a useful cross-layer consistency check for the observed IEEE 802.15.4 frame behavior. It does not validate an implemented IPv6/6LoWPAN adaptation layer.

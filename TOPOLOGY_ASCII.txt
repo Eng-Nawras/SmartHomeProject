@@ -83,9 +83,9 @@ NETWORK STACK (per node):
 │ NETWORK LAYER                                                           │
 ├─────────────────────────────────────────────────────────────────────────┤
 │ Wireless Side:              │  Wired Side:                              │
-│ • IPv6/6LoWPAN            │  • IPv4                                    │
+│ • IPv4 / IEEE 802.15.4            │  • IPv4                                    │
 │ • Header Compression      │  • Global Addresses                        │
-│ • Fragmentation at ~60B   │  • Static Routing                          │
+│ • IEEE 802.15.4 frame segmentation behavior   │  • Static Routing                          │
 │ • Unicast/Broadcast       │  • Routing via Gateway                     │
 └─────────────────────────────────────────────────────────────────────────┘
                                     │
@@ -159,8 +159,8 @@ KEY ARCHITECTURAL FEATURES:
 5. CROSS-LAYER MODELING
    ├─ Application → Transport → Network → MAC → PHY
    ├─ IEEE 802.15.4 frame limits (127 octets)
-   ├─ IPv6/6LoWPAN compression effects
-   └─ Fragmentation thresholds (~60-80 B payload)
+   ├─ IPv4 / IEEE 802.15.4 compression effects
+   └─ Analytical 6LoWPAN fragmentation thresholds
 
 
 ADDRESSES & ROUTING:

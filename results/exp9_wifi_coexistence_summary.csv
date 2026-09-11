@@ -1,0 +1,5 @@
+config,n_runs,smart_home_received_mean,smart_home_received_std,wifi_sent_mean,wifi_received_mean
+NoWiFi,5,44.0,1.8708286933869707,0.0,0.0
+Low,5,43.8,3.03315017762062,599.0,598.0
+Medium,5,42.6,3.0495901363953815,5981.0,5980.0
+High,5,42.2,1.3038404810405297,59801.0,59799.6

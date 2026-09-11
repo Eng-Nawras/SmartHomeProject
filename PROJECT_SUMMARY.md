@@ -62,7 +62,7 @@
 ```
 Application Layer:  UdpBasicApp (sensors) → UdpSink (monitoring app)
 Transport Layer:    UDP
-Network Layer:      IPv4 + IPv6/6LoWPAN (compression for 802.15.4)
+Network Layer:      IPv4 over IEEE 802.15.4 (6LoWPAN not implemented)
 Link Layer:         IEEE 802.15.4 (narrowband)
 PHY Layer:          Ieee802154NarrowbandScalarRadioMedium
 ```
@@ -159,7 +159,7 @@ Monitoring App → [poll request] → Sensor → [response] → Monitoring App
 
 ---
 
-### Experiment 5: Packet Size & 6LoWPAN Fragmentation
+### Experiment 5: Packet Size & IEEE 802.15.4 Fragmentation Study
 **Objective:** Relate payload size to fragmentation and cross-layer overhead.
 
 | Parameter      | Values              | Runs | Seeds |
@@ -172,10 +172,10 @@ Monitoring App → [poll request] → Sensor → [response] → Monitoring App
 
 **Cross-Layer Analysis:**
 - IEEE 802.15.4 frame limit: 127 octets (PSDU)
-- IPv6 header: 40 octets
+- IPv6 header: 40 octets (analytical reference only)
 - UDP header: 8 octets
-- 6LoWPAN compression reduces IPv6 header to ~2–6 octets
-- Fragmentation threshold: ~60–80 octets (depending on header compression)
+- 6LoWPAN compression can reduce IPv6/UDP overhead (analytical reference only)
+- 6LoWPAN fragmentation thresholds are discussed analytically; they are not implemented in the current model
 
 **Metrics:** Fragmentation rate, airtime, delay, PDR, retransmission exposure, energy
 
@@ -273,8 +273,8 @@ results/
 
 ### 4. **Fragmentation Study (Exp 5)**
 - IEEE 802.15.4 PSDU limit is 127 octets.
-- With IPv6 (40 octets) + UDP (8 octets) = 48-byte overhead minimum.
-- Payloads >60 B trigger 6LoWPAN compression; >80 B may trigger fragmentation.
+- For an analytical 6LoWPAN comparison, IPv6 (40 octets) + UDP (8 octets) gives a 48-byte uncompressed network/transport overhead reference.
+- The payload thresholds are analytical estimates for a 6LoWPAN deployment and are not simulated 6LoWPAN behavior in this project.
 - Study quantifies airtime, delay, and PDR degradation.
 
 ### 5. **Multiple Seeds**
@@ -386,11 +386,11 @@ python plot_exp5.py
 
 ## 8. Limitations & Caveats
 
-1. **Simplified Protocol Stack:** UDP directly over IPv4/6LoWPAN (no TCP, CoAP, or MQTT protocol overhead modeling).
+1. **Simplified Protocol Stack:** UDP over IPv4/IEEE 802.15.4 (no TCP, CoAP, or MQTT protocol overhead modeling).
 2. **Traffic Emulation:** Application patterns mimic CoAP/MQTT behavior but do not implement full protocol semantics.
 3. **Energy Modeling:** Basic battery drain; no detailed per-device energy profiling in current scope.
 4. **Interference:** Single-channel narrowband model; no multi-channel or coexistence analysis.
-5. **Fragmentation Analysis:** Theoretically justified; simulation may not fully capture cross-layer fragmentation behavior in some scenarios.
+5. **Fragmentation Analysis:** The 6LoWPAN part is an analytical comparison; the simulation measures the implemented IPv4/IEEE 802.15.4 behavior and must not be interpreted as a 6LoWPAN implementation.
 
 ---
 
