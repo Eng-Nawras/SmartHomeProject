@@ -1,0 +1,12 @@
+<environment>
+    <!--
+        A single concrete partition wall running horizontally at y ~ 6m,
+        spanning the full width of the house (x = 0..20m) and 3m in height
+        (z = 0..3m). This separates temp1, smoke1, and smoke2 (all at y=3,
+        "the north room") from the gateway and every other device
+        (all at y >= 7, "the rest of the house").
+    -->
+    <object position="min 0 5.85 -1" orientation="0 0 0"
+            shape="cuboid 20 0.3 3" material="concrete"
+            fill-color="150 75 0" opacity="0.6"/>
+</environment>

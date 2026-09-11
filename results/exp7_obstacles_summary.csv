@@ -1,0 +1,3 @@
+config,obstructed_PDR_mean,unobstructed_PDR_mean,delay_mean_ms,n_runs
+Exp7_NoWalls,1.0,1.0,4.43257581419042,5
+Exp7_WithWalls,0.0,1.0,4.30898963280002,5
