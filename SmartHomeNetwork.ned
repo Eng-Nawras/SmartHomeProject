@@ -34,76 +34,76 @@ import inet.visualizer.canvas.integrated.IntegratedMultiCanvasVisualizer;
 network SmartHomeNetwork
 {
     parameters:
-        @display("bgb=32,20");
+        @display("bgb=42,28");
     submodules:
         // ---------------- Periodic monitoring sensors ----------------
         temp1: SensorNode {
-            @display("p=3,3;i=misc/sensor");
+            @display("p=4,5;i=misc/thermometer_l;is=18");
         }
         temp2: SensorNode {
-            @display("p=3,7;i=misc/sensor");
+            @display("p=4,12;i=misc/thermometer_l;is=18");
         }
         temp3: SensorNode {
-            @display("p=3,11;i=misc/sensor");
+            @display("p=4,19;i=misc/thermometer_l;is=18");
         }
         motion1: SensorNode {
-            @display("p=3,15;i=misc/sensor2");
+            @display("p=11,20;i=misc/sensor2_l;is=18");
         }
         motion2: SensorNode {
-            @display("p=6,17;i=misc/sensor2");
+            @display("p=17,20;i=misc/sensor2_l;is=18");
         }
         motion3: SensorNode {
-            @display("p=9,17;i=misc/sensor2");
+            @display("p=23,20;i=misc/sensor2_l;is=18");
         }
 
         // ---------------- Event-driven / critical sensors ----------------
         smoke1: SensorNode {
-            @display("p=13,3;i=misc/sensor3");
+            @display("p=12,5;i=misc/sensor3_l;is=18");
         }
         smoke2: SensorNode {
-            @display("p=17,3;i=misc/sensor3");
+            @display("p=19,5;i=misc/sensor3_l;is=18");
         }
 
         // ---------------- Actuators ----------------
         light1: SensorNode {
-            @display("p=13,17;i=status/bulb");
+            @display("p=28,19;i=status/bulb;is=18");
         }
         light2: SensorNode {
-            @display("p=17,17;i=status/bulb");
+            @display("p=34,19;i=status/bulb;is=18");
         }
         hvac1: SensorNode {
-            @display("p=20,10;i=misc/thermometer");
+            @display("p=30,6;i=misc/thermometer_l;is=18");
         }
         alarm1: SensorNode {
-            @display("p=20,14;i=misc/alarm");
+            @display("p=34,15;i=misc/fire_vs;is=18");
         }
 
         // ---------------- Gateway / Border Router ----------------
         gateway: Router {
             numWlanInterfaces = 1;
             wlan[0].typename = "Ieee802154NarrowbandInterface";
-            @display("p=10,10;i=misc/sensorgateway");
+            @display("p=23,12;i=misc/sensorgateway_l;is=20");
         }
 
         // ---------------- Wired core network ----------------
         coreSwitch: EthernetSwitch {
-            @display("p=15,10");
+            @display("p=30,12;i=device/switch_l;is=20");
         }
         monitoringApp: StandardHost {
-            @display("p=20,7;i=device/server");
+            @display("p=37,12;i=device/server_l;is=22");
         }
 
         // ---------------- Wireless medium ----------------
         radioMedium: Ieee802154NarrowbandScalarRadioMedium {
-            @display("p=28,1");
+            @display("p=41,2;is=0");
         }
 
         // ---------------- IP configurator & visualizer ----------------
         configurator: Ipv4NetworkConfigurator {
-            @display("p=28,3");
+            @display("p=41,4;is=0");
         }
         visualizer: IntegratedMultiCanvasVisualizer {
-            @display("p=28,5");
+            @display("p=41,6;is=0");
         }
 
     connections:
